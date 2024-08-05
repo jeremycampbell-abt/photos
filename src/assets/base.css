@@ -1,5 +1,15 @@
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
+  --color-primary: #575761;
+  --color-secondary: #ffbf46;
+  --color-neutral: #919191;
+  --color-neutral-light: #c6c6c6;
+  --color-neutral-dark: #5e5e5e;
+  --color-danger: #b41c2b;
+  --color--success: #009f42;
+  --color--warning: #cc8800;
+  --color-info: #388cfa;
+
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
