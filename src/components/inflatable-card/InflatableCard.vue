@@ -4,7 +4,12 @@
       <slot name="deflated" />
     </div>
     <transition name="inflate" :duration="400">
-      <div v-if="inflate" class="inflatable-card__inflated-content" @click="onDeflate" ref="inflatedContent">
+      <div
+        v-if="inflate"
+        class="inflatable-card__inflated-content"
+        @click="onDeflate"
+        ref="inflatedContent"
+      >
         <div class="inflatable-card__inflated-inner-content">
           <slot name="inflated" />
         </div>
@@ -41,7 +46,7 @@ const inflatedPosition = computed(() => {
   if (element) {
     return {
       top: `${element.offsetTop}px`,
-      left: `${element.offsetLeft}px`
+      left: `${element.offsetLeft}px`,
     };
   }
   return {
@@ -68,22 +73,23 @@ function onDeflate() {
   $inflate-transition-duration: 300ms;
   $inflate-inner-transition-duration: 100ms;
 
-  &__deflated-content, &__inflated-content {
+  &__deflated-content,
+  &__inflated-content {
     background-color: var(--color-primary);
     color: white;
-  }
-  
-  &__deflated-content {
     border-radius: 5px;
+  }
+
+  &__deflated-content {
     padding: 1rem;
     width: 100%;
     transition: transform 200ms ease;
-    
+
     &:hover {
       transform: scale(1.02);
       cursor: pointer;
     }
-    
+
     &:active {
       transform: scale(1);
     }
@@ -93,11 +99,10 @@ function onDeflate() {
     position: absolute;
     width: 100%;
     height: 100%;
-    top:0;
-    right:0;
-    left:0;
-    bottom:0;
-    border-radius: 0;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
   }
 
   // TODO - bad naming here
@@ -106,19 +111,20 @@ function onDeflate() {
     width: 100%;
   }
 
-  .inflate-enter-from, .inflate-leave-to {
-    border-radius: 5px;
+  .inflate-enter-from,
+  .inflate-leave-to {
     width: v-bind(inflatedContentWidth);
     height: v-bind(inflatedContentHeight);
-    top: calc(v-bind('inflatedPosition.top') );
-    left: calc(v-bind('inflatedPosition.left') );
+    top: calc(v-bind('inflatedPosition.top'));
+    left: calc(v-bind('inflatedPosition.left'));
 
     .inflatable-card__inflated-inner-content {
       opacity: 0;
     }
   }
 
-  .inflate-enter-active, .inflate-leave-active {
+  .inflate-enter-active,
+  .inflate-leave-active {
     transition: all $inflate-transition-duration ease;
 
     .inflatable-card__inflated-inner-content {
