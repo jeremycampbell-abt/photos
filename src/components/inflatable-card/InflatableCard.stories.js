@@ -51,11 +51,11 @@ export default {
         </InflatableCard>
       </InflatableCardStage>
     `,
-  })
+  }),
 };
 
 export const Basic = {
   args: {
-    deflatedSlot: 'This is some deflated content'
-  }
+    deflatedSlot: 'This is some deflated content',
+  },
 };
