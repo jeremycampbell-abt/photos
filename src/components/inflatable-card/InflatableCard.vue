@@ -1,9 +1,14 @@
 <template>
   <div class="inflatable-card">
-    <div class="inflatable-card__deflated-content" @click="onInflate" ref="deflatedContent">
+    <div
+      class="inflatable-card__deflated-content"
+      :class="{ 'inflatable-card__deflated-content--hidden': !deflated }"
+      @click="onInflate"
+      ref="deflatedContent"
+    >
       <slot name="deflated" />
     </div>
-    <transition name="inflate" :duration="400">
+    <transition name="inflate" :duration="400" @after-leave="deflated = true">
       <div
         v-if="inflate"
         class="inflatable-card__inflated-content"
@@ -22,6 +27,7 @@
 import { ref, computed } from 'vue';
 
 const inflate = ref(false);
+const deflated = ref(true);
 const deflatedContent = ref();
 const inflatedContent = ref();
 const deflatedContentWidth = ref();
@@ -59,6 +65,7 @@ const inflatedPosition = computed(() => {
 
 function onInflate() {
   inflate.value = true;
+  deflated.value = false;
   deflatedContentWidth.value = deflatedContent.value?.clientWidth;
   deflatedContentHeight.value = deflatedContent.value?.clientHeight;
 }
@@ -68,6 +75,12 @@ function onDeflate() {
 }
 </script>
 
+<style lang="scss">
+.inflatable-card {
+  --inflatable-card-background-color: var(--color-neutral-light);
+}
+</style>
+
 <style lang="scss" scoped>
 .inflatable-card {
   $inflate-transition-duration: 300ms;
@@ -75,23 +88,23 @@ function onDeflate() {
 
   &__deflated-content,
   &__inflated-content {
-    background-color: var(--color-primary);
+    background-color: var(--inflatable-card-background-color);
     color: white;
     border-radius: 5px;
   }
 
   &__deflated-content {
-    padding: 1rem;
     width: 100%;
     transition: transform 200ms ease;
+    //background-size: cover;
 
     &:hover {
       transform: scale(1.02);
       cursor: pointer;
     }
 
-    &:active {
-      transform: scale(1);
+    &--hidden {
+      opacity: 0;
     }
   }
 
@@ -103,6 +116,7 @@ function onDeflate() {
     right: 0;
     left: 0;
     bottom: 0;
+    //background-size: contain;
   }
 
   // TODO - bad naming here
@@ -117,6 +131,7 @@ function onDeflate() {
     height: v-bind(inflatedContentHeight);
     top: calc(v-bind('inflatedPosition.top'));
     left: calc(v-bind('inflatedPosition.left'));
+    //background-size: 100%;
 
     .inflatable-card__inflated-inner-content {
       opacity: 0;
