@@ -51,7 +51,7 @@ const props = defineProps({
   }
 
   &__inflated-image {
-    max-height: 98dvh;
+    max-height: var(--photo-max-height);
   }
 
   &__inflated-content {

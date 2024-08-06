@@ -10,7 +10,7 @@
 .inflatable-card-stage {
   position: relative;
   width: 100dvw;
-  height: 100dvh;
+  height: var(--app-content-height);
   display: flex;
   justify-content: center;
   align-items: start;

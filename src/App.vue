@@ -3,6 +3,7 @@ import { useSessionStorage } from '@vueuse/core';
 import InflatableCardStage from '@/components/inflatable-card/InflatableCardStage.vue';
 import PhotoCard from '@/components/photo-card/PhotoCard.vue';
 import AddPhotoCard from '@/components/add-photo-card/AddPhotoCard.vue';
+import AppBar from '@/components/app/AppBar.vue';
 
 const images = useSessionStorage('images', []);
 
@@ -12,6 +13,8 @@ function addImages(imageUrls) {
 </script>
 
 <template>
+  <AppBar />
+
   <InflatableCardStage>
     <div class="photo-cards">
       <AddPhotoCard @add-images="addImages" />
