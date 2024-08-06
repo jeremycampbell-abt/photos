@@ -21,6 +21,7 @@
         >
           <slot name="inflated" />
         </div>
+        <div class="inflatable-card__scrim" />
       </div>
     </transition>
   </div>
@@ -125,24 +126,36 @@ function onDeflate() {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(94, 94, 94, 0.3);
   }
 
   // TODO - bad naming here
   &__inflated-inner-content {
     max-height: 100dvh;
     box-shadow: 0px 10px 20px -6px rgba(94, 94, 94, 0.75);
+    z-index: 101;
+  }
+
+  &__scrim {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(94, 94, 94, 0.3);
+    z-index: 100;
   }
 
   .inflate-enter-from,
   .inflate-leave-to {
     // TODO: Try to change this to a scale transition?
+    // TODO: Stagger the animation here - position first, then width and height
     max-width: v-bind(inflatedContentWidth);
     max-height: v-bind(inflatedContentHeight);
     top: calc(v-bind('inflatedPosition.top'));
     left: calc(v-bind('inflatedPosition.left'));
 
-    .inflatable-card__inflated-inner-content--fade {
+    .inflatable-card__inflated-inner-content--fade,
+    .inflatable-card__scrim {
       opacity: 0;
     }
   }
@@ -153,7 +166,11 @@ function onDeflate() {
 
     .inflatable-card__inflated-inner-content--fade {
       // TODO: Remove the transition here and try to get the "reveal" effect
-      transition: all $inflate-inner-transition-duration ease;
+      transition: opacity $inflate-inner-transition-duration ease;
+    }
+
+    .inflatable-card__scrim {
+      transition: opacity $inflate-transition-duration ease;
     }
   }
 
