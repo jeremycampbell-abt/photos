@@ -15,7 +15,10 @@
         @click="onDeflate"
         ref="inflatedContent"
       >
-        <div class="inflatable-card__inflated-inner-content">
+        <div
+          class="inflatable-card__inflated-inner-content"
+          :class="{ 'inflatable-card__inflated-inner-content--fade': props.innerFade }"
+        >
           <slot name="inflated" />
         </div>
       </div>
@@ -24,7 +27,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
+
+const props = defineProps({
+  innerFade: {
+    type: Boolean,
+  },
+});
 
 const inflate = ref(false);
 const deflated = ref(true);
@@ -32,42 +41,40 @@ const deflatedContent = ref();
 const inflatedContent = ref();
 const deflatedContentWidth = ref();
 const deflatedContentHeight = ref();
+const inflatedContentWidth = ref('100%');
+const inflatedContentHeight = ref('100%');
 
-const inflatedContentWidth = computed(() => {
-  if (deflatedContentWidth.value) {
-    return `${deflatedContentWidth.value}px`;
-  }
-  return '100%';
-});
+const defaultPosition = {
+  top: '0',
+  right: '0',
+  bottom: '0',
+  left: '0',
+};
+const inflatedPosition = ref(defaultPosition);
 
-const inflatedContentHeight = computed(() => {
-  if (deflatedContentHeight.value) {
-    return `${deflatedContentHeight.value}px`;
-  }
-  return '100%';
-});
+function setInflatedPositioning() {
+  inflatedContentWidth.value = deflatedContentWidth.value
+    ? `${deflatedContentWidth.value}px`
+    : '100%';
+  inflatedContentHeight.value = deflatedContentHeight.value
+    ? `${deflatedContentHeight.value}px`
+    : '100%';
 
-const inflatedPosition = computed(() => {
   const element = deflatedContent.value;
-  if (element) {
-    return {
-      top: `${element.offsetTop}px`,
-      left: `${element.offsetLeft}px`,
-    };
-  }
-  return {
-    top: '0',
-    right: '0',
-    bottom: '0',
-    left: '0',
-  };
-});
+  inflatedPosition.value = element
+    ? {
+        top: `${element.offsetTop}px`,
+        left: `${element.offsetLeft}px`,
+      }
+    : defaultPosition;
+}
 
 function onInflate() {
   inflate.value = true;
   deflated.value = false;
   deflatedContentWidth.value = deflatedContent.value?.clientWidth;
   deflatedContentHeight.value = deflatedContent.value?.clientHeight;
+  setInflatedPositioning();
 }
 
 function onDeflate() {
@@ -96,7 +103,6 @@ function onDeflate() {
   &__deflated-content {
     width: 100%;
     transition: transform 200ms ease;
-    //background-size: cover;
 
     &:hover {
       transform: scale(1.02);
@@ -116,7 +122,6 @@ function onDeflate() {
     right: 0;
     left: 0;
     bottom: 0;
-    //background-size: contain;
   }
 
   // TODO - bad naming here
@@ -131,9 +136,8 @@ function onDeflate() {
     height: v-bind(inflatedContentHeight);
     top: calc(v-bind('inflatedPosition.top'));
     left: calc(v-bind('inflatedPosition.left'));
-    //background-size: 100%;
 
-    .inflatable-card__inflated-inner-content {
+    .inflatable-card__inflated-inner-content--fade {
       opacity: 0;
     }
   }
@@ -142,14 +146,14 @@ function onDeflate() {
   .inflate-leave-active {
     transition: all $inflate-transition-duration ease;
 
-    .inflatable-card__inflated-inner-content {
+    .inflatable-card__inflated-inner-content--fade {
       // TODO: Remove the transition here and try to get the "reveal" effect
       transition: all $inflate-inner-transition-duration ease;
     }
   }
 
   .inflate-enter-active {
-    .inflatable-card__inflated-inner-content {
+    .inflatable-card__inflated-inner-content--fade {
       transition-delay: $inflate-transition-duration;
     }
   }
