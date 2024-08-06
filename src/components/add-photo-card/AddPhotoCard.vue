@@ -1,5 +1,5 @@
 <template>
-  <InflatableCard v-model:inflate="inflate" class="add-photo-card" inner-fade>
+  <InflatableCard v-model:inflate="inflate" class="add-photo-card" inner-fade @deflated="addImages">
     <template #deflated>
       <div class="add-photo-card__deflated-content">
         <span> + </span>
@@ -10,7 +10,7 @@
         <div class="add-photo-card__form">
           <div class="add-photo-card__form-title">Add images</div>
           <textarea v-model="textAreaModel" placeholder="Urls" rows="10" />
-          <button @click="addImages">Add</button>
+          <button @click="onAddImagesClick">Add</button>
         </div>
       </div>
     </template>
@@ -25,13 +25,19 @@ const emit = defineEmits(['addImages']);
 
 const textAreaModel = ref('');
 const inflate = ref(false);
+const shouldAddImages = ref(false);
+
+function onAddImagesClick() {
+  shouldAddImages.value = true;
+  inflate.value = false;
+}
 
 function addImages() {
   emit(
     'addImages',
     textAreaModel.value.split('\n').filter((str) => str.trim()),
   );
-  inflate.value = false;
+  textAreaModel.value = '';
 }
 </script>
 

@@ -8,7 +8,7 @@
     >
       <slot name="deflated" />
     </div>
-    <transition name="inflate" :duration="400" @after-leave="deflated = true">
+    <Transition name="inflate" :duration="400" @after-leave="afterDeflate">
       <div v-if="inflate" class="inflatable-card__inflated-content" ref="inflatedContent">
         <div
           class="inflatable-card__inflated-card"
@@ -23,7 +23,7 @@
         </div>
         <div class="inflatable-card__scrim" @click="onDeflate" />
       </div>
-    </transition>
+    </Transition>
   </div>
 </template>
 
@@ -39,6 +39,8 @@ const props = defineProps({
     type: Boolean,
   },
 });
+
+const emit = defineEmits(['deflated']);
 
 const deflated = ref(true);
 const deflatedContent = ref();
@@ -83,6 +85,11 @@ function onInflate() {
 
 function onDeflate() {
   inflate.value = false;
+}
+
+function afterDeflate() {
+  deflated.value = true;
+  emit('deflated');
 }
 </script>
 
