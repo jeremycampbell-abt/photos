@@ -9,19 +9,19 @@
       <slot name="deflated" />
     </div>
     <transition name="inflate" :duration="400" @after-leave="deflated = true">
-      <div
-        v-if="inflate"
-        class="inflatable-card__inflated-content"
-        @click="onDeflate"
-        ref="inflatedContent"
-      >
+      <div v-if="inflate" class="inflatable-card__inflated-content" ref="inflatedContent">
         <div
-          class="inflatable-card__inflated-inner-content"
-          :class="{ 'inflatable-card__inflated-inner-content--fade': props.innerFade }"
+          class="inflatable-card__inflated-card"
+          :class="{ 'inflatable-card__inflated-card--fade': props.innerFade }"
         >
-          <slot name="inflated" />
+          <div
+            class="inflatable-card__inflated-card-content"
+            :class="{ 'inflatable-card__inflated-card-content--fade': props.innerFade }"
+          >
+            <slot name="inflated" />
+          </div>
         </div>
-        <div class="inflatable-card__scrim" />
+        <div class="inflatable-card__scrim" @click="onDeflate" />
       </div>
     </transition>
   </div>
@@ -30,13 +30,16 @@
 <script setup>
 import { ref } from 'vue';
 
+const inflate = defineModel('inflate', {
+  type: Boolean,
+});
+
 const props = defineProps({
   innerFade: {
     type: Boolean,
   },
 });
 
-const inflate = ref(false);
 const deflated = ref(true);
 const deflatedContent = ref();
 const inflatedContent = ref();
@@ -85,7 +88,8 @@ function onDeflate() {
 
 <style lang="scss">
 .inflatable-card {
-  --inflatable-card-background-color: var(--color-neutral-light);
+  --deflated-background-color: white;
+  --inflated-background-color: var(--color-neutral-light);
 }
 </style>
 
@@ -94,16 +98,10 @@ function onDeflate() {
   $inflate-transition-duration: 300ms;
   $inflate-inner-transition-duration: 100ms;
 
-  &__deflated-content,
-  &__inflated-content {
-    background-color: var(--inflatable-card-background-color);
-    color: white;
-  }
-
   &__deflated-content {
     width: 100%;
     transition: transform 200ms ease;
-    border-radius: 5px;
+    background-color: var(--deflated-background-color);
 
     &:hover {
       transform: scale(1.02);
@@ -128,11 +126,12 @@ function onDeflate() {
     align-items: center;
   }
 
-  // TODO - bad naming here
-  &__inflated-inner-content {
+  &__inflated-card {
+    background-color: var(--inflated-background-color);
     max-height: 100dvh;
     box-shadow: 0px 10px 20px -6px rgba(94, 94, 94, 0.75);
     z-index: 101;
+    border-radius: 5px;
   }
 
   &__scrim {
@@ -154,7 +153,11 @@ function onDeflate() {
     top: calc(v-bind('inflatedPosition.top'));
     left: calc(v-bind('inflatedPosition.left'));
 
-    .inflatable-card__inflated-inner-content--fade,
+    .inflatable-card__inflated-card--fade {
+      background-color: var(--deflated-background-color);
+    }
+
+    .inflatable-card__inflated-card-content--fade,
     .inflatable-card__scrim {
       opacity: 0;
     }
@@ -164,9 +167,15 @@ function onDeflate() {
   .inflate-leave-active {
     transition: all $inflate-transition-duration ease;
 
-    .inflatable-card__inflated-inner-content--fade {
+    .inflatable-card__inflated-card--fade {
+      transition: background-color $inflate-transition-duration ease;
+    }
+
+    .inflatable-card__inflated-card-content--fade {
       // TODO: Remove the transition here and try to get the "reveal" effect
-      transition: opacity $inflate-inner-transition-duration ease;
+      transition:
+        opacity $inflate-inner-transition-duration ease,
+        background-color $inflate-inner-transition-duration ease;
     }
 
     .inflatable-card__scrim {
@@ -175,7 +184,7 @@ function onDeflate() {
   }
 
   .inflate-enter-active {
-    .inflatable-card__inflated-inner-content--fade {
+    .inflatable-card__inflated-card-content--fade {
       transition-delay: $inflate-transition-duration;
     }
   }

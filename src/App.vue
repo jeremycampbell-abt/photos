@@ -1,11 +1,20 @@
 <script setup>
+import { useSessionStorage } from '@vueuse/core';
 import InflatableCardStage from '@/components/inflatable-card/InflatableCardStage.vue';
 import PhotoCard from '@/components/photo-card/PhotoCard.vue';
+import AddPhotoCard from '@/components/add-photo-card/AddPhotoCard.vue';
+
+const images = useSessionStorage('images', []);
+
+function addImages(imageUrls) {
+  images.value.push(...imageUrls);
+}
 </script>
 
 <template>
   <InflatableCardStage>
     <div class="photo-cards">
+      <AddPhotoCard @add-images="addImages" />
       <PhotoCard
         src="https://asset.gecdesigns.com/img/wallpapers/beautiful-fantasy-wallpaper-ultra-hd-wallpaper-4k-sr10012418-1706506236698-cover.webp"
       />
@@ -20,6 +29,7 @@ import PhotoCard from '@/components/photo-card/PhotoCard.vue';
       <PhotoCard
         src="https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg"
       />
+      <PhotoCard v-for="image in images" :key="image" :src="image" />
     </div>
   </InflatableCardStage>
 </template>
