@@ -42,8 +42,7 @@ const props = defineProps({
 
   &__deflated-image,
   &__inflated-image {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
     object-fit: contain;
   }
 
@@ -51,13 +50,15 @@ const props = defineProps({
     max-height: 200px;
   }
 
+  &__inflated-image {
+    max-height: 98dvh;
+  }
+
   &__inflated-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    row-gap: 1rem;
-    height: 100%;
+    max-height: 100%;
   }
 
   &__cancel {

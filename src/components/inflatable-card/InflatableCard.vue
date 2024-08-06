@@ -97,12 +97,12 @@ function onDeflate() {
   &__inflated-content {
     background-color: var(--inflatable-card-background-color);
     color: white;
-    border-radius: 5px;
   }
 
   &__deflated-content {
     width: 100%;
     transition: transform 200ms ease;
+    border-radius: 5px;
 
     &:hover {
       transform: scale(1.02);
@@ -116,24 +116,29 @@ function onDeflate() {
 
   &__inflated-content {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(94, 94, 94, 0.3);
   }
 
   // TODO - bad naming here
   &__inflated-inner-content {
-    height: 100%;
-    width: 100%;
+    max-height: 100dvh;
+    box-shadow: 0px 10px 20px -6px rgba(94, 94, 94, 0.75);
   }
 
   .inflate-enter-from,
   .inflate-leave-to {
-    width: v-bind(inflatedContentWidth);
-    height: v-bind(inflatedContentHeight);
+    // TODO: Try to change this to a scale transition?
+    max-width: v-bind(inflatedContentWidth);
+    max-height: v-bind(inflatedContentHeight);
     top: calc(v-bind('inflatedPosition.top'));
     left: calc(v-bind('inflatedPosition.left'));
 
