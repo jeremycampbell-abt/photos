@@ -141,7 +141,7 @@ function afterDeflate() {
   &__inflated-card {
     background-color: var(--inflated-background-color);
     max-height: var(--app-content-height);
-    max-width: 100%; // probably need to make this less than 100%
+    max-width: calc(100% - 30px);
     box-shadow: 0px 10px 20px -6px rgba(94, 94, 94, 0.75);
     z-index: 101;
     border-radius: 5px;
