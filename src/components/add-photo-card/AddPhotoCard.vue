@@ -59,8 +59,8 @@ function addImages() {
 
   &__inflated-content {
     color: var(--color-neutral);
-    min-height: 200px;
-    min-width: 200px;
+    min-height: 400px;
+    min-width: 300px;
     padding: 0.5rem;
   }
 

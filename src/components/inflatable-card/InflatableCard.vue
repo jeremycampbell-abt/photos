@@ -8,8 +8,13 @@
     >
       <slot name="deflated" />
     </div>
-    <Transition name="inflate" :duration="400" @after-leave="afterDeflate">
-      <div v-if="inflate" class="inflatable-card__inflated-content" ref="inflatedContent">
+    <Transition name="inflate" :duration="600" @after-leave="afterDeflate">
+      <div
+        v-if="inflate"
+        class="inflatable-card__inflated-content"
+        :class="{ 'inflatable-card__inflated-content--fade': props.innerFade }"
+        ref="inflatedContent"
+      >
         <div
           class="inflatable-card__inflated-card"
           :class="{ 'inflatable-card__inflated-card--fade': props.innerFade }"
@@ -102,8 +107,8 @@ function afterDeflate() {
 
 <style lang="scss" scoped>
 .inflatable-card {
-  $inflate-transition-duration: 300ms;
-  $inflate-inner-transition-duration: 100ms;
+  $inflate-transition-duration: 400ms;
+  $inflate-inner-transition-duration: 200ms;
 
   &__deflated-content {
     width: 100%;
@@ -136,6 +141,7 @@ function afterDeflate() {
   &__inflated-card {
     background-color: var(--inflated-background-color);
     max-height: var(--app-content-height);
+    max-width: 100%; // probably need to make this less than 100%
     box-shadow: 0px 10px 20px -6px rgba(94, 94, 94, 0.75);
     z-index: 101;
     border-radius: 5px;
@@ -160,6 +166,12 @@ function afterDeflate() {
     top: calc(v-bind('inflatedPosition.top'));
     left: calc(v-bind('inflatedPosition.left'));
 
+    .inflatable-card__inflated-card {
+      max-width: v-bind(inflatedContentWidth);
+      max-height: v-bind(inflatedContentHeight);
+      border-radius: 0px;
+    }
+
     .inflatable-card__inflated-card--fade {
       background-color: var(--deflated-background-color);
     }
@@ -173,9 +185,21 @@ function afterDeflate() {
   .inflate-enter-active,
   .inflate-leave-active {
     transition: all $inflate-transition-duration ease;
+    overflow: hidden;
+
+    .inflatable-card__inflated-card {
+      transition:
+        border-radius $inflate-transition-duration ease,
+        max-width $inflate-transition-duration ease,
+        max-height $inflate-transition-duration ease;
+    }
 
     .inflatable-card__inflated-card--fade {
-      transition: background-color $inflate-transition-duration ease;
+      transition:
+        border-radius $inflate-transition-duration ease,
+        max-width $inflate-transition-duration ease,
+        max-height $inflate-transition-duration ease,
+        background-color $inflate-transition-duration ease;
     }
 
     .inflatable-card__inflated-card-content--fade {
@@ -196,8 +220,12 @@ function afterDeflate() {
     }
   }
 
-  .inflate-leave-active {
+  .inflate-leave-active.inflatable-card__inflated-content--fade {
     transition-delay: $inflate-inner-transition-duration;
+
+    .inflatable-card__inflated-card {
+      transition-delay: $inflate-inner-transition-duration;
+    }
   }
 }
 </style>
